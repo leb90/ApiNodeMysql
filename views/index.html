@@ -1,0 +1,293 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>Formulario de Contacto</title>
+    <!--Import Google Icon Font-->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<style>
+    #newUsr,
+    #editUsr {
+        display: none;
+    }
+    
+    .button-edit,
+    .button-delete,
+    #btn-crearuser,
+    #button-create,
+    #button-edit-close,
+    .button-showClient {
+        border: none;
+        color: white;
+        padding: 4px 4px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        -webkit-transition-duration: 0.4s;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        background-color: #008CBA;
+        color: white;
+        border: 2px solid #008CBA;
+        border-radius: 4px;
+    }
+    
+    .button-edit:hover,
+    .button-delete:hover,
+    #btn-crearuser:hover,
+    #button-create:hover,
+    .button-showClient:hover,
+    #button-edit-close:hover {
+        background-color: white;
+        color: black;
+    }
+    
+    fieldset {
+        display: block;
+        margin-left: 0px;
+        margin-right: 400px;
+        padding-top: 0.35em;
+        padding-bottom: 0.625em;
+        padding-left: 0.75em;
+        padding-right: 0.75em;
+        border: 3px groove (internal value);
+    }
+    
+    table {
+        border-collapse: collapse;
+        width: 70.4%;
+    }
+    
+    th,
+    td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+    
+    #table-style {
+        font-size: 20px;
+        font-style: italic;
+        background-color: #E0E0E0;
+    }
+    
+    label {
+        width: 8%;
+        float: left;
+    }
+    
+    .user-modal {
+        position: absolute;
+        background: red;
+        width: 90%;
+        height: 90%;
+        display: none;
+    }
+</style>
+</head>
+
+<body>
+    <!--Import jQuery before materialize.js-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+
+    <!--  <div class="user-modal"></div> -->
+
+    <!--MODAL PRACTICA -->
+    <!-- Modal Trigger -->
+
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h4>Usuario:</h4>
+            <p class="modal-data">DATOS ACA</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Aceptar</a>
+        </div>
+    </div>
+
+
+
+
+    <fieldset>
+        <button id="btn-crearuser">Crear Usuario</button>
+
+
+    </fieldset>
+
+
+
+
+
+    <!-- Crear usuarios -->
+    <div id="newUsr">
+        <fieldset>
+            <legend>Crear Usuario:</legend>
+            <div><label>Nombre:</label><input type="text" class="creteName" /></div>
+            <div><label>Direccion:</label><input type="text" class="createDireccion" /></div>
+            <div><label>Telefono:</label><input type="text" class="createTelefono" /></div>
+            <div><button id="button-create">Crear Usuarios</button></div>
+        </fieldset>
+    </div>
+    <!-- Crear usuarios -->
+
+
+
+
+
+    <!-- Editar usuarios -->
+    <div id="editUsr">
+        <fieldset>
+            <legend>Editar Usuario:</legend>
+            <div><label>Nombre:</label><input type="text" class="editName" /></div>
+            <div><label>Direccion:</label><input type="text" class="editDireccion" /></div>
+            <div><label>Telefono:</label><input type="text" class="editTelefono" /></div>
+            <input type="hidden" class="editId" />
+            <button class="button-edit">Editar</button>
+            <button id="button-edit-close">X</button>
+    </div>
+    </fieldset>
+    </div>
+    <!-- Editar usuarios -->
+
+
+
+
+
+    <div id="list">Cargando...</div>
+
+
+
+
+    <script>
+        var URL = "http://localhost:2000/client/"
+
+        ////List///////////////////////////////////////////
+        function listUsers() {
+            //var x = location.href="http://localhost:2000/client";
+            console.log("llama la funcion")
+            var lista = '';
+            $.getJSON('http://localhost:2000/client')
+                .done(function(data) {
+                    lista += '<table><tr id=table-style><td>Cliente</td><td>Direccion</td><td>Telefono</td><td></td><td></td><td></td></tr>';
+                    for (var i = 0; i < data.length; i++) {
+                        lista += '<tr><tr><td>' + data[i].username + '</td>' + '<td>' + data[i].direccion + '</td>' + '<td>' + data[i].telefono + '</td>' + '<td>' + '<button class="button-edit" onclick="edit(' + data[i].id + ')">Editar Usuario</button>' + '</td>' + '<td>' + '<button class="button-delete" onclick="butdelete(' + data[i].id + ')">Eliminar Usuario</button>' + '</td>' + '<td>' + '<button class="button-showClient" onclick="show(' + data[i].id + ')">Ver Cliente</button>' + '</td></tr>';
+                    }
+                    lista += '</table>';
+                    $("#list").html(lista);
+                });
+
+        }
+        //////Create User Post///////////////////////////////
+        $('#button-create').click(function() {
+            var data = {
+                username: $(".creteName").val(),
+                telefono: $(".createTelefono").val(),
+                direccion: $(".createDireccion").val()
+            };
+            $.ajax({
+                dataType: "json",
+                url: URL,
+                data: data,
+                type: "POST",
+                success: function(result) {
+                    listUsers();
+                }
+            })
+        });
+
+        $(document).ready(function() {
+            listUsers();
+        });
+
+        var edit = function(id) {
+
+            $.getJSON('http://localhost:2000/client/' + id)
+                .done(function(result) {
+
+
+                    $(".editName").val(result[0].username)
+                    $(".editTelefono").val(result[0].telefono)
+                    $(".editDireccion").val(result[0].direccion)
+                    $(".editId").val(result[0].id)
+                });
+
+            $('#editUsr').slideDown(500);
+
+        }
+
+
+        /////////////////Create user boton hidden///////////////////
+        $('#btn-crearuser').click(function() {
+            $('#newUsr').toggle(200);
+        });
+        /////////////////Editar user boton hidden///////////////////
+        $('#button-edit-close').click(function() {
+            $('#editUsr').toggle(200);
+        });
+
+        //////////////////////////////////////
+        $('.button-edit').click(function() {
+            var data = {
+                username: $(".editName").val(),
+                telefono: $(".editTelefono").val(),
+                direccion: $(".editDireccion").val()
+             
+            }
+            var id = $(".editId").val();
+            console.log(data)
+
+            $.ajax({
+                dataType: "json",
+                url: URL + id,
+                data: data,
+                type: "PUT",
+                success: function(data) {
+                  console.log("Tu vieja");
+                    listUsers();
+                }
+            })
+        })
+        var butdelete = function(id) {
+            var r = confirm("desea eliminar?");
+            if (r) {
+                $.ajax({
+                    dataType: "json",
+                    url: URL + id,
+                    type: 'DELETE',
+                    success: function(data) {
+                        listUsers();
+                    }
+                })
+            }
+        }
+        var show = function(id) {
+
+            $.getJSON('http://localhost:2000/client/' + id)
+                .done(function(data) {
+                    var viewClient = '<table><tr id=table-style><td>Cliente</td><td>Direccion</td><td>Telefono</td></tr>' + '<tr><tr><td>' + data[0].username + ' </td>' + '<td>' + data[0].direccion + ' </td>' + '<td>' + data[0].telefono + ' </td>' + '</tr>'
+                    $(".modal-data").html(viewClient),
+                        $('#modal1').openModal()
+
+                });
+        }
+    </script>
+
+</body>
+
+</html>

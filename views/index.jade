@@ -1,0 +1,44 @@
+doctype html
+html
+  head
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js')
+  body
+    head
+      title
+      h1
+      p Welcome to 
+        br
+        label(for="username") Nombre
+        input(clas="username",type="text",name="username",value='#{info[0].username}')
+        br
+        label(for="email") Email
+        input(type="text",name="email",value="#{info[0].email}")
+        br
+        label(for="password") Password
+        input(type="text",name="password",value="#{info[0].password}")
+        br
+        input(type="hidden", name="_method", value="PUT")
+        input(type="hidden",name="id",value="#{info[0].id}")
+        br
+        input#lala(type='button', value='Show Result')
+        
+    script.
+      $(document).ready(function(){
+                $("#lala").onClick(function(){
+            var usernam = $(".username").value();
+            var pass = $(".password").value();
+            var em = $(".email").value();
+          $.ajax({
+            url: '../../client',
+            type: 'PUT',
+            data:
+              username : usernam,
+              email : email,
+              password : password,
+              success: function(data) {
+
+              }
+          });
+        });
+      });
+
